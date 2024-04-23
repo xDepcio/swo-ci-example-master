@@ -1,0 +1,41 @@
+before_script:
+  - apt update --yes
+  - apt install --yes cmake
+
+build-gcc10:
+  image: gcc:10
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake ../
+    - make
+  artifacts:
+    untracked: true
+
+test-gcc10:
+  image: gcc:10
+  stage: test
+  needs: ["build-gcc10"]
+  script:
+    - cd build
+    - CTEST_OUTPUT_ON_FAILURE=1 make test
+
+build-gcc9:
+  image: gcc:9
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake ../
+    - make
+  artifacts:
+    untracked: true
+
+test-gcc9:
+  image: gcc:9
+  stage: test
+  needs: ["build-gcc9"]
+  script:
+    - cd build
+    - CTEST_OUTPUT_ON_FAILURE=1 make test
